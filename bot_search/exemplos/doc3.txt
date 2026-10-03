@@ -1,0 +1,3 @@
+Pipes permitem a comunicação entre processos.
+Um processo escreve e outro processo lê, processo por processo.
+Este arquivo fala de threads, não de tarefas.

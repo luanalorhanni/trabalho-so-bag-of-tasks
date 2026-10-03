@@ -1,0 +1,3 @@
+Um processo é um programa em execução.
+Cada processo tem seu próprio espaço de endereçamento.
+O sistema operacional escalona cada processo na CPU.

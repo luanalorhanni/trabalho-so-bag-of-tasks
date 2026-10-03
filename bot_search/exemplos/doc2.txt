@@ -1,0 +1,2 @@
+O fork() cria um novo processo, chamado de processo filho.
+O processo pai recebe o PID do filho.

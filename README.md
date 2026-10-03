@@ -2,9 +2,6 @@
 
 Trabalho Prático 1 de **Sistemas Operacionais I** (UFMA / DEINF), sobre API Unix e concorrência.
 
-Discentes: Luana Lorhanni @luanalorhanni e Melissa Palhano @*
-
-
 O programa conta quantas vezes um termo aparece em vários arquivos de texto usando o modelo **Bag-of-Tasks**: o processo pai (mestre) cria um processo filho (escravo) para cada arquivo com `fork()`, cada filho conta as ocorrências no seu arquivo e manda o resultado ao pai por um `pipe()` exclusivo, e o pai junta tudo depois de esperar os filhos com `wait()`.
 
 ## Como compilar
@@ -59,6 +56,6 @@ Se um arquivo não puder ser aberto, o filho envia `-1` pelo pipe e o pai mostra
 | `make clean` | Apaga o executável                             |
 | `make zip`   | Gera o `.zip` de entrega                       |
 
-## Autor
+## Autores
 
-Seu Nome — Sistemas Operacionais I, Prof. Mário Meireles Teixeira
+Luana Lorhanni [@luanalorhanni](https://github.com/luanalorhanni) e Melissa Palhano
