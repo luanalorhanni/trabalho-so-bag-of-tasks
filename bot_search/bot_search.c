@@ -82,6 +82,13 @@ static void executa_filho(int pipefd[2], const char *arquivo, const char *termo,
         close(trab[i].fd_leitura);
     }
 
+    /*
+     * O fork() copiou o vetor alocado pelo pai. O filho não retorna ao
+     * main, então libera a própria cópia aqui. Isso não afeta o pai:
+     * cada processo tem seu espaço de endereçamento.
+     */
+    free((void *)trab);
+
     int ocorrencias = conta_no_arquivo(arquivo, termo);
 
     /* Envia o resultado ao pai como um int "cru" */
@@ -93,7 +100,15 @@ static void executa_filho(int pipefd[2], const char *arquivo, const char *termo,
     }
 
     close(pipefd[1]);
-    exit(ocorrencias == ERRO_ARQUIVO ? EXIT_FAILURE : EXIT_SUCCESS);
+
+    /*
+     * No fluxo normal o enunciado pede exit(0). Se o arquivo falhou, o
+     * pai fica sabendo pelo valor -1 escrito no pipe — o wait(NULL)
+     * descarta o status — e o filho ainda assim termina com erro.
+     */
+    if (ocorrencias == ERRO_ARQUIVO)
+        exit(EXIT_FAILURE);
+    exit(0);
 }
 
 int main(int argc, char *argv[])
@@ -120,8 +135,8 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    printf("[Mestre PID: %d] Criando %d trabalhadores Bag-of-Tasks...\n",
-           (int) getpid(), n);
+    printf("[Mestre PID: %d] Criando %d %s Bag-of-Tasks...\n",
+           (int) getpid(), n, n == 1 ? "trabalhador" : "trabalhadores");
 
     int criados = 0; /* quantos filhos foram realmente criados */
 
@@ -166,6 +181,7 @@ int main(int argc, char *argv[])
 
     /* Lê a resposta de cada filho pelo seu pipe */
     long total = 0;
+    int falha = (criados != n);
 
     for (int i = 0; i < criados; i++) {
         int ocorrencias;
@@ -175,9 +191,11 @@ int main(int argc, char *argv[])
             /* lidos == 0 significa que o filho fechou o pipe sem escrever */
             fprintf(stderr, "[Mestre] Filho (PID %d - '%s') não enviou resposta válida.\n",
                     (int) trab[i].pid, trab[i].arquivo);
+            falha = 1;
         } else if (ocorrencias == ERRO_ARQUIVO) {
             printf("[Mestre] Resposta do Filho (PID %d - '%s'): erro ao ler o arquivo.\n",
                    (int) trab[i].pid, trab[i].arquivo);
+            falha = 1;
         } else {
             printf("[Mestre] Resposta do Filho (PID %d - '%s'): %d ocorrências.\n",
                    (int) trab[i].pid, trab[i].arquivo, ocorrencias);
@@ -194,12 +212,15 @@ int main(int argc, char *argv[])
         }
     }
 
-    printf("[Mestre] Todos os %d processos filhos finalizaram.\n", criados);
+    if (criados == 1)
+        printf("[Mestre] O processo filho finalizou.\n");
+    else
+        printf("[Mestre] Todos os %d processos filhos finalizaram.\n", criados);
     printf("--------------------------------------------------\n");
     printf("TOTAL CONSOLIDADOS: %ld ocorrências do termo '%s'.\n", total, termo);
 
     free(trab);
 
-    /* Se nem todos os filhos foram criados, sinaliza erro na saída */
-    return (criados == n) ? EXIT_SUCCESS : EXIT_FAILURE;
+    /* Falha de criação, de leitura do pipe ou de abertura de arquivo */
+    return falha ? EXIT_FAILURE : EXIT_SUCCESS;
 }
