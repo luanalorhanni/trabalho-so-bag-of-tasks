@@ -6,13 +6,16 @@ O programa conta quantas vezes um termo aparece em vários arquivos de texto usa
 
 ## Como compilar
 
-Precisa de Linux (ou outro sistema Unix-like), `gcc` e `make`.
+Precisa de Linux (ou outro sistema Unix-like), `gcc` e `make`. O `Makefile` e o código ficam na pasta `bot_search`, então os comandos abaixo são executados a partir dela.
 
 ```bash
+cd bot_search
 make
 ```
 
 ## Como usar
+
+Ainda dentro de `bot_search`:
 
 ```bash
 ./bot_search <termo_de_busca> <arquivo1.txt> <arquivo2.txt> ... <arquivoN.txt>
@@ -48,6 +51,8 @@ Se um arquivo não puder ser aberto, o filho envia `-1` pelo pipe e o pai mostra
 - Ocorrências sobrepostas não são contadas (em `aaaa`, o termo `aa` conta 2 vezes, não 3).
 
 ## Comandos do Makefile
+
+Também a partir de `bot_search`:
 
 | Comando      | O que faz                                      |
 |--------------|------------------------------------------------|
