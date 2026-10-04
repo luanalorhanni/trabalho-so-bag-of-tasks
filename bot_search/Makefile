@@ -22,5 +22,5 @@ clean:
 # Gera o pacote de entrega nesta pasta.
 zip: clean
 	rm -f bot_search.zip
-	zip -r bot_search.zip bot_search.c Makefile exemplos relatorio.pdf
+	zip -r bot_search.zip bot_search.c Makefile exemplos
 	zip -j bot_search.zip ../README.md
