@@ -19,6 +19,8 @@ run: $(ALVO)
 clean:
 	rm -f $(ALVO) *.o
 
-# Gera o arquivo de entrega (troque NomeAluno pelo seu nome)
+# Gera o pacote de entrega nesta pasta.
 zip: clean
-	zip -r Trabalho1_NomeAluno.zip bot_search.c Makefile README.md exemplos relatorio.pdf
+	rm -f bot_search.zip
+	zip -r bot_search.zip bot_search.c Makefile exemplos relatorio.pdf
+	zip -j bot_search.zip ../README.md

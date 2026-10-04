@@ -58,4 +58,4 @@ Se um arquivo não puder ser aberto, o filho envia `-1` pelo pipe e o pai mostra
 
 ## Autores
 
-Luana Lorhanni [@luanalorhanni](https://github.com/luanalorhanni) e Melissa Palhano
+Luana Lorhanni [@luanalorhanni](https://github.com/luanalorhanni) e Melissa Palhano [@melissapalhano](https://github.com/melissapalhano)
